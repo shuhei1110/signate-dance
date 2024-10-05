@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  dance:
+    image: dance:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: dance
+    volumes:
+     - ../:/app
+    tty: true
+    stdin_open: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    shm_size: '30g'

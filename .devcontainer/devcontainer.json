@@ -1,0 +1,6 @@
+{
+    "name": "dance",
+    "dockerComposeFile": ["./docker-compose.yml"],
+    "service": "dance",
+    "workspaceFolder": "/dance"
+}

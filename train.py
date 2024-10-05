@@ -31,7 +31,8 @@ base_config = config.BaseConfig()
 data_config = config.DataConfig()
 model_config = config.ModelConfig()
 
-df_train_class = pd.read_csv(data_config.train_class)
+# df_train_class = pd.read_csv(data_config.train_class)
+df_train_class = pd.read_csv(data_config.train_class).iloc[0:500]
 
 train_paths = [data_config.train_dir + train_path for train_path in os.listdir(data_config.train_dir)]
 test_paths = [data_config.test_dir + test_path for test_path in os.listdir(data_config.test_dir)]
@@ -77,17 +78,17 @@ valid_dataset = CustomDataset(df_valid, status='valid')
 
 train_dataloader = DataLoader(train_dataset, 
                               batch_size=model_config.batch_size,
-                              shuffle=False,
+                              shuffle=True,
                               num_workers=0,
                               pin_memory=True,
-                              drop_last=False
+                              drop_last=True
                               )
 valid_dataloader = DataLoader(valid_dataset, 
                               batch_size=model_config.batch_size,
-                              shuffle=False,
+                              shuffle=True,
                               num_workers=0,
                               pin_memory=True,
-                              drop_last=False
+                              drop_last=True
                               )
 
 # for images, label in train_dataloader:

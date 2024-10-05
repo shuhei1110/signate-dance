@@ -20,5 +20,5 @@ class ModelConfig():
         self.encoder = 'resnet50d'
         self.lr = 1e-4
         self.epochs = 3
-        self.batch_size = 1
+        self.batch_size = 4
         self.ch_size = 3

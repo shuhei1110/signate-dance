@@ -57,6 +57,9 @@ class CustomDataset(Dataset):
             sys.exit()
         images = image_processor.load_image(video_path)
         images = torch.from_numpy(images)
+        images = images.permute(0, 3, 2, 1)
+        images = images[torch.linspace(0, images.size(0)-1, 32).long()]
+        images = F.interpolate(images, size=(256, 128), mode='bilinear', align_corners=False)
 
         label = row.loc['class']
 
@@ -87,6 +90,12 @@ valid_dataloader = DataLoader(valid_dataset,
                               drop_last=False
                               )
 
+# for images, label in train_dataloader:
+#     print(images.shape)
+#     break
+
+# sys.exit()
+
 class ClassificationModel(nn.Module):
     def __init__(self):
        super().__init__()
@@ -105,8 +114,8 @@ class ClassificationModel(nn.Module):
        
     def forward(self, x):
         n_frames = x.shape[1]
-        width = x.shape[2]
-        height = x.shape[3]
+        width = x.shape[3]
+        height = x.shape[4]
         x = x.view(model_config.batch_size*n_frames, model_config.ch_size, width, height)
         x = self.encoder(x)
         x = x.view(model_config.batch_size, n_frames, -1)

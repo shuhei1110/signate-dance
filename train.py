@@ -87,10 +87,6 @@ valid_dataloader = DataLoader(valid_dataset,
                               drop_last=False
                               )
 
-for images, label in valid_dataloader:
-    print(images.shape)
-    break
-
 class ClassificationModel(nn.Module):
     def __init__(self):
        super().__init__()

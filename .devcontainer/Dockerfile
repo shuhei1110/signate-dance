@@ -1,8 +1,6 @@
-FROM nvidia/cuda:11.1.1-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-
-WORKDIR /app
 
 RUN /bin/bash -c "apt update && \
     apt install -y \
@@ -15,10 +13,12 @@ RUN /bin/bash -c "apt update && \
     ca-certificates \
     libsndfile1-dev \
     libgl1 \
-    python3.8 \
+    python3.10 \
     python3-pip"
 
-RUN git clone https://github.com/shuhei1110/dotfiles.git
-
 RUN pip3 install --no-cache-dir -U pip
-RUN pip3 install --no-cache-dir torch==1.9.0+cu111 torchvision==0.10.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip3 install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cu118
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+
+WORKDIR /app

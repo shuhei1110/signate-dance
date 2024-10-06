@@ -1,3 +1,4 @@
+import os
 import torch
 
 class BaseConfig():
@@ -24,3 +25,6 @@ class Resnet50dGRU(BaseConfig):
         self.drop_rate = 0.5
 
         self.save_dir = self.model_dir + 'resnet50d_gru-001/'
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)
+        

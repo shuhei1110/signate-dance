@@ -56,8 +56,8 @@ class CustomDataset(Dataset):
         images = image_processor.load_image(video_path)
         images = torch.from_numpy(images)
         images = images.permute(0, 3, 2, 1)
-        images = images[torch.linspace(0, images.size(0)-1, 64).long()]
-        images = F.interpolate(images, size=(256, 128), mode='bilinear', align_corners=False)
+        images = images[torch.linspace(0, images.size(0)-1, config.reshaped_nframe).long()]
+        images = F.interpolate(images, size=(config.reshaped_width, config.reshaped_height), mode='bilinear', align_corners=False)
 
         label = row.loc['class']
 
@@ -109,7 +109,7 @@ class ClassificationModel(nn.Module):
            nn.BatchNorm1d(32),
            nn.LeakyReLU(0.1),
            nn.Dropout(config.drop_rate),
-           nn.Linear(32, 17, bias=True)
+           nn.Linear(32, config.output_size, bias=True)
            )
        
     def forward(self, x):
@@ -157,7 +157,7 @@ class MetricsCalculater:
         for x in self.probabilities:
             processed_probabilities.append(x / x.sum())
         if self.mode == 'multi':
-            return roc_auc_score(self.targets, processed_probabilities, multi_class='ovo', labels=list(range(17)))
+            return roc_auc_score(self.targets, processed_probabilities, multi_class='ovo', labels=list(range(config.output_size)))
         else:
             return roc_auc_score(self.targets, self.probabilities)
 
@@ -219,7 +219,7 @@ for epoch in range(config.epochs):
     if valid_loss  < valid_loss_best:
         valid_loss_best = valid_loss
         logger.info('Validation loss improved')
-        torch.save(model, f'{config.encoder}_gru_001_epoch{epoch}_{valid_acc:.4f}.pth')
+        torch.save(model, f'{config.save_dir}{config.encoder}_gru_001_epoch{epoch}_{valid_loss:.4f}.pth')
         
 
 

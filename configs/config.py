@@ -19,10 +19,14 @@ class Resnet50dGRU(BaseConfig):
         super().__init__()
         self.encoder = 'resnet50d'
         self.lr = 1e-4
-        self.epochs = 30
+        self.epochs = 50
         self.batch_size = 4
         self.ch_size = 3
-        self.drop_rate = 0.5
+        self.reshaped_nframe = 32
+        self.reshaped_width = 256
+        self.reshaped_height = 128
+        self.drop_rate = 0.0
+        self.output_size = 17
 
         self.save_dir = self.model_dir + 'resnet50d_gru-001/'
         if not os.path.exists(self.save_dir):

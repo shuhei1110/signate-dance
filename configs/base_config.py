@@ -13,22 +13,3 @@ class BaseConfig():
         self.model_dir = self.root_dir + 'models/'
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-class Resnet50dGRU(BaseConfig):
-    def __init__(self):
-        super().__init__()
-        self.encoder = 'resnet50d'
-        self.lr = 1e-4
-        self.epochs = 50
-        self.batch_size = 4
-        self.ch_size = 3
-        self.reshaped_nframe = 32
-        self.reshaped_width = 256
-        self.reshaped_height = 128
-        self.drop_rate = 0.0
-        self.output_size = 17
-
-        self.save_dir = self.model_dir + 'resnet50d_gru-001/'
-        if not os.path.exists(self.save_dir):
-            os.makedirs(self.save_dir)
-        

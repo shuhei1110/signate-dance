@@ -1,0 +1,13 @@
+data/*
+logs/*
+
+*.pth
+*.mp4
+*.wav
+*.png
+*.jpg
+*.jpeg
+
+*.log
+
+**/__pycache__/

@@ -48,4 +48,4 @@ for idx, test_path in enumerate(tqdm(test_paths)):
 
 df_test_submit = pd.read_csv(config.test_submit)
 df_test_submit['class'] = results
-df_test_submit.to_csv(config.output_dir+'resnet50d_gru_001_001.csv', index=False)
+df_test_submit.to_csv(config.output_dir+'resnet50d_gru_001_001.csv', index=False, header=False)

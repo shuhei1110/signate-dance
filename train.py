@@ -19,7 +19,7 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 
 from utils import logger, image_processor
-from configs import config
+from configs.resnet50d_gru_001 import Resnet50dGRU, ClassificationModel # type: ignore
 
 print('import ok')
 torch.cuda.empty_cache()
@@ -27,12 +27,11 @@ torch.cuda.empty_cache()
 logger = logger.Logger().logger
 logger.info('Stert processing...')
 
-config = config.Resnet50dGRU()
+config = Resnet50dGRU()
 
 df_train_class = pd.read_csv(config.train_class)
 
 train_paths = [config.train_dir + train_path for train_path in os.listdir(config.train_dir)]
-test_paths = [config.test_dir + test_path for test_path in os.listdir(config.test_dir)]
 
 class CustomDataset(Dataset):
     def __init__(self, dataframe, status='train'):
@@ -94,37 +93,6 @@ valid_dataloader = DataLoader(valid_dataset,
 
 # sys.exit()
 
-class ClassificationModel(nn.Module):
-    def __init__(self):
-       super().__init__()
-       
-       self.encoder = timm.create_model(config.encoder, pretrained=True, in_chans=config.ch_size, num_classes=512)
-       self.gru = nn.GRU(512, 128, batch_first=True, bidirectional=False, num_layers=2, dropout=config.drop_rate)
-       self.layer = nn.Sequential(
-           nn.Linear(128, 64, bias=True),
-           nn.BatchNorm1d(64),
-           nn.LeakyReLU(0.1),
-           nn.Dropout(config.drop_rate),
-           nn.Linear(64, 32, bias=True),
-           nn.BatchNorm1d(32),
-           nn.LeakyReLU(0.1),
-           nn.Dropout(config.drop_rate),
-           nn.Linear(32, 17, bias=True)
-           )
-       
-    def forward(self, x):
-        n_frames = x.shape[1]
-        width = x.shape[3]
-        height = x.shape[4]
-        x = x.view(config.batch_size*n_frames, config.ch_size, width, height)
-        x = self.encoder(x)
-        x = x.view(config.batch_size, n_frames, -1)
-        x, _ = self.gru(x)
-        x = x[:, -1, :]
-        x = self.layer(x)
-
-        return x
-
 class MetricsCalculater:
     def __init__(self, mode='binary'):
         self.probabilities = []
@@ -157,7 +125,7 @@ class MetricsCalculater:
         for x in self.probabilities:
             processed_probabilities.append(x / x.sum())
         if self.mode == 'multi':
-            return roc_auc_score(self.targets, processed_probabilities, multi_class='ovo', labels=list(range(17)))
+            return roc_auc_score(self.targets, processed_probabilities, multi_class='ovo', labels=list(range(config.output_size)))
         else:
             return roc_auc_score(self.targets, self.probabilities)
 

@@ -31,3 +31,19 @@ class Resnet50dGRU(BaseConfig):
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
         
+class Resnet101GRU(BaseConfig):
+    def __init__(self):
+        super().__init__()
+        self.encoder = 'resnet101.a1_in1k'
+        self.lr = 1e-4
+        self.epochs = 25
+        self.batch_size = 4
+        self.ch_size = 3
+        self.reshaped_nframe = 32
+        self.reshaped_width = 256
+        self.reshaped_height = 128
+        self.drop_rate = 0.0
+
+        self.save_dir = self.model_dir + 'resnet101_gru_001/'
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)

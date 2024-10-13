@@ -10,6 +10,9 @@ class BaseConfig():
         self.test_submit = self.root_dir + 'data/test_submit.csv'
         self.sample_submit = self.root_dir + 'data/sample_submit.csv'
         self.output_dir = self.root_dir + 'data/output/'
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
+
         self.model_dir = self.root_dir + 'models/'
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

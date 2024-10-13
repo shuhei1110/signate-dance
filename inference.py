@@ -12,7 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from utils import logger, image_processor
-from configs.resnet50d_gru_001 import Resnet50dGRU, ClassificationModel # type: ignore
+from configs.resnet101_gru_001 import Resnet101GRU, ClassificationModel # type: ignore
 
 print('import ok')
 torch.cuda.empty_cache()
@@ -20,7 +20,7 @@ torch.cuda.empty_cache()
 logger = logger.Logger().logger
 logger.info('Stert processing...')
 
-config = Resnet50dGRU()
+config = Resnet101GRU()
 
 test_paths = [config.test_dir + test_path for test_path in os.listdir(config.test_dir)]
 
@@ -48,4 +48,4 @@ for idx, test_path in enumerate(tqdm(test_paths)):
 
 df_test_submit = pd.read_csv(config.test_submit)
 df_test_submit['class'] = results
-df_test_submit.to_csv(config.output_dir+'resnet50d_gru_001_001.csv', index=False)
+df_test_submit.to_csv(config.output_dir+'resnet101_gru_001_001.csv', index=False)

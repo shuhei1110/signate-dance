@@ -3,7 +3,7 @@ import timm
 import torch.nn as nn
 from configs import base_config
 
-class Resnet101GRU(BaseConfig):
+class Resnet101GRU(base_config.BaseConfig):
     def __init__(self):
         super().__init__()
         self.encoder = 'resnet101.a1_in1k'
@@ -15,10 +15,14 @@ class Resnet101GRU(BaseConfig):
         self.reshaped_width = 256
         self.reshaped_height = 128
         self.drop_rate = 0.0
+        self.output_size = 17
+        self.class_names = list(range(self.output_size))
 
         self.save_dir = self.model_dir + 'resnet101_gru_001/'
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
+
+        self.inference_model = self.save_dir + 'resnet101.a1_in1k_gru_001_epoch23_0.7644.pth'
 
             
 class ClassificationModel(nn.Module):
